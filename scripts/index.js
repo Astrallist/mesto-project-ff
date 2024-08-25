@@ -1,4 +1,4 @@
-// @todo: Темплейт карточки
+/*// @todo: Темплейт карточки
 const cardTemplate = document.querySelector("#card-template").content;
 
 // @todo: DOM узлы
@@ -25,3 +25,4 @@ initialCards.forEach(function (card) {
   const cardContent = createCard(card, removeCard);
   placesList.append(cardContent);
 });
+*/
