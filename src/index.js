@@ -1,12 +1,7 @@
 import "./pages/index.css";
-import { initialCards } from "./scripts/card";
-import { createCard, likeCard, removeCard } from "./scripts/cards";
-import {
-  openModal,
-  closeModal,
-  closeByEscape,
-  closeByOverlay,
-} from "./scripts/modal";
+import { initialCards } from "./scripts/cards";
+import { createCard, likeCard, removeCard } from "./scripts/card";
+import { openModal, closeModal, closeByOverlay } from "./scripts/modal";
 
 // @todo: DOM узлы
 const placesList = document.querySelector(".places__list");
@@ -18,7 +13,7 @@ const buttonEditProfile = document.querySelector(".profile__edit-button");
 const popupEditProfile = document.querySelector(".popup_type_edit");
 buttonEditProfile.addEventListener("click", function () {
   openModal(popupEditProfile);
-  autofill();
+  fillPopupEditInputs();
 });
 
 //Окно новой карточки
@@ -26,20 +21,6 @@ const buttonAddProfile = document.querySelector(".profile__add-button");
 const popupAddProfile = document.querySelector(".popup_type_new-card");
 buttonAddProfile.addEventListener("click", () => openModal(popupAddProfile));
 
-//Функция открытия карточки
-/*
-export function openCard(card) {
-  const newCard = card.closest(".card"),
-    cardImage = newCard.querySelector(".card__image"),
-    cardTitle = newCard.querySelector(".card__title");
-
-  popupImage.src = cardImage.src;
-  popupImage.alt = cardTitle.alt;
-  popupCaption.textContent = cardTitle.textContent;
-
-  openModal(popupImage);
-}
-*/
 //Функция открытия карточки
 
 export function openCard(card) {
@@ -51,20 +32,10 @@ export function openCard(card) {
   openModal(popupImage);
 }
 
-const popupImage = document.querySelector(".popup_type_image");
-document.addEventListener("click", (evt) => {
-  if (evt.target.classList.contains("card__image")) {
-    popupImage.querySelector(".popup__image").src = evt.target.src;
-    popupImage.querySelector(".popup__image").alt = evt.target.alt;
-    popupImage.querySelector(".popup__caption").textContent = evt.target.alt;
-    openModal(popupImage);
-  }
-});
-
 //Открытие и закрытие окон
 document.addEventListener("click", (evt) => {
   if (evt.target.classList.contains("popup__close")) {
-    closeModal(evt.target.parentNode.parentNode);
+    closeModal(evt.closest());
   }
 });
 
@@ -78,14 +49,14 @@ initialCards.forEach(function (card) {
 
 //Изменение данных профиля
 // Находим форму в DOM
-const formElement = document.querySelector('.popup__form[name="edit-profile"]'); // Воспользуйтесь методом querySelector()
+const formProfile = document.querySelector('.popup__form[name="edit-profile"]'); // Воспользуйтесь методом querySelector()
 // Находим поля формы в DOM
-const nameInput = formElement.querySelector('input[name="name"]'); // Воспользуйтесь инструментом .querySelector()
-const jobInput = formElement.querySelector('input[name="description"]'); // Воспользуйтесь инструментом .querySelector()
+const nameInput = formProfile.querySelector('input[name="name"]'); // Воспользуйтесь инструментом .querySelector()
+const jobInput = formProfile.querySelector('input[name="description"]'); // Воспользуйтесь инструментом .querySelector()
 
 // Обработчик «отправки» формы, хотя пока
 // она никуда отправляться не будет
-function handleFormSubmit(evt) {
+function chanceFormProfile(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
   // Так мы можем определить свою логику отправки.
   // О том, как это делать, расскажем позже.
@@ -103,7 +74,7 @@ function handleFormSubmit(evt) {
 }
 
 //Автозаполнение формы
-function autofill() {
+function fillPopupEditInputs() {
   const titleProfile = document.querySelector(".profile__title");
   const descriptionProfile = document.querySelector(".profile__description");
   nameInput.value = titleProfile.textContent;
@@ -112,7 +83,7 @@ function autofill() {
 
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
-formElement.addEventListener("submit", handleFormSubmit);
+formProfile.addEventListener("submit", chanceFormProfile);
 
 //Добавление новой карточки
 // Находим форму в DOM
