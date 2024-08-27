@@ -7,11 +7,11 @@ const cardTemplate = document.querySelector("#card-template").content;
 export function createCard(card, likeCard, removeCard, openCard) {
   const cardContent = cardTemplate.querySelector(".card").cloneNode(true);
   cardContent.querySelector(".card__title").textContent = card.name;
-  cardContent.querySelector(".card__image").src = card.link;
-  cardContent.querySelector(".card__image").alt = card.name;
+  const image = cardContent.querySelector(".card__image");
+  image.src = card.link;
+  image.alt = card.name;
 
-  const openButton = cardContent.querySelector(".card__image");
-  openButton.addEventListener("click", () => openCard(card));
+  image.addEventListener("click", () => openCard(card));
 
   const likeButton = cardContent.querySelector(".card__like-button");
   likeButton.addEventListener("click", () => likeCard(likeButton));
