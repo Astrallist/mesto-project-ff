@@ -35,7 +35,7 @@ export function openCard(card) {
 //Открытие и закрытие окон
 document.addEventListener("click", (evt) => {
   if (evt.target.classList.contains("popup__close")) {
-    closeModal(evt.closest());
+    closeModal(evt.target.closest('.popup'));
   }
 });
 
