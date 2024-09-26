@@ -13,28 +13,19 @@ export const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-
-      // если ошибка, отклоняем промис
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(checkResponse);
 }
 
 export function getProfileInfo() {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
-  }).then((res) => {
-    checkResponse(res)
-  });
+  })
+    .then(checkResponse);
 }
 
 //Проверка получения данных
 function checkResponse(res) {
   if (res.ok) return res.json();
-
   return Promise.reject(`Ошибка: ${res.status}`);
 }
 
@@ -63,7 +54,7 @@ export function addNewCard(card) {
     }),
   })
     .then((res) => {
-      checkResponse(res)
+     return checkResponse(res)
     })
 };
 
@@ -86,7 +77,7 @@ export function addLike(card) {
       method: 'PUT',
     })
     .then((res) => {
-      checkResponse(res)
+      return checkResponse(res)
     })
 };
 
@@ -97,7 +88,7 @@ export function removeLike(card) {
     method: 'DELETE',
   })
     .then((res) => {
-      checkResponse(res)
+      return checkResponse(res)
     })
 };
 
