@@ -39,7 +39,7 @@ export function createCard(
     });
   } else {
     likeSum.textContent = 0;
-    
+
   }
 
   const deleteButton = cardContent.querySelector(".card__delete-button");
@@ -56,8 +56,8 @@ export function removeCard(card, cardContent) {
   deleteCard(card) //удаляем на сервере
     .then((res) => {
       cardContent.remove();
-    });
-  //.catch((err) => )
+    })
+    .catch((err) => console.log(err));
   //.finally(() => )
 }
 
