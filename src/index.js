@@ -1,4 +1,4 @@
-console.log('Версия 78');
+console.log('Версия 83');
 
 import "./pages/index.css";
 //import { initialCards } from "./scripts/cards";  НЕ АКТУАЛЬНО
@@ -30,12 +30,18 @@ const avatarProfile = document.querySelector('.profile__image'); //аватар 
 
 const placesList = document.querySelector(".places__list");
 const popupImage = document.querySelector(".popup_type_image");
-const popupImage_image = popupImage.querySelector(".popup__image");
-const popupImage_caption = popupImage.querySelector(".popup__caption");
+const popupImageElement = popupImage.querySelector(".popup__image");
+const popupImageСaption = popupImage.querySelector(".popup__caption");
 const formProfile = document.querySelector('.popup__form[name="edit-profile"]');
 const nameInput = formProfile.querySelector('input[name="name"]');
 const jobInput = formProfile.querySelector('input[name="description"]');
 const descriptionProfile = document.querySelector(".profile__description");
+
+const formPlace = document.querySelector('.popup__form[name="new-place"]');
+const placeInput = formPlace.querySelector('input[name="place-name"]');
+const linkInput = formPlace.querySelector('input[name="link"]');
+
+const buttonNewCard = document.querySelector('#button_popup_type_new-card');
 
 //Открытие и закрытие модальных окон
 const popups = document.querySelectorAll(".popup");
@@ -56,9 +62,9 @@ buttonAddProfile.addEventListener("click", () => openModal(popupAddProfile));
 
 //Функция открытия карточки
 export function openCard(card) {
-  popupImage_image.src = card.link;
-  popupImage_image.alt = card.name;
-  popupImage_caption.textContent = card.name;
+  popupImageElement.src = card.link;
+  popupImageElement.alt = card.name;
+  popupImageСaption.textContent = card.name;
   openModal(popupImage);
 }
 
@@ -91,7 +97,7 @@ function chanceFormProfile(evt) {
       descriptionProfile.textContent = jobInputtValue;
       closeModal(popupEditProfile);
     })
-    //.catch((err) => )
+    .catch((err) => console.log(err))
     .finally(() => {
       loading(false, formPlace);//конец загрузки
     })
@@ -107,12 +113,6 @@ function fillPopupEditInputs() {
 formProfile.addEventListener("submit", chanceFormProfile);
 
 //Добавление новой карточки
-const formPlace = document.querySelector('.popup__form[name="new-place"]');
-const placeInput = formPlace.querySelector('input[name="place-name"]');
-const linkInput = formPlace.querySelector('input[name="link"]');
-
-const buttonNewCard = document.querySelector('#button_popup_type_new-card');
-
 function createNewCard(evt) {
   evt.preventDefault();
   loading(true, formPlace);//начало загрузки
@@ -120,20 +120,25 @@ function createNewCard(evt) {
   card.name = placeInput.value;
   card.link = linkInput.value;
 
-  buttonNewCard.setAttribute("disabled", true);
-  buttonNewCard.classList.add(validationConfig.inactiveButtonClass);
-  clearValidation(formPlace, validationConfig); //очищаем поле
+  addNewCard(card)//сохранение карточки на сервере
+    .then((res) => {
+      const cardContent = createCard(card, profileId, true, likeCard, removeCard, openCard);
+
+      buttonNewCard.setAttribute("disabled", true);
+      buttonNewCard.classList.add(validationConfig.inactiveButtonClass);
+      clearValidation(formPlace, validationConfig); //очищаем поле
+
+      placesList.prepend(cardContent);
+      formPlace.reset();
+      closeModal(popupAddProfile);
+    })
+    .catch((err) => console.log(err))
+    .finally(() => {
+      loading(false, formPlace);//конец загрузки
+    })
+};
 
 
-  const cardContent = createCard(card, profileId, true, likeCard, removeCard, openCard);
-  placesList.prepend(cardContent);
-  formPlace.reset();
-  loading(false, formPlace);//конец загрузки
-
-
-  addNewCard(card);//сохранение карточки на сервере
-  closeModal(popupAddProfile);
-}
 
 //Функция обновления аватар
 function chanceAvatarProfile(evt) {
@@ -147,7 +152,7 @@ function chanceAvatarProfile(evt) {
       avatarProfile.style.backgroundImage = `url(${avatarInput.value})`;
       closeModal(popupAvatar);
     })
-    //.catch((err) => )
+    .catch((err) => console.log(err))
     .finally(() => {
       loading(false, formPlace);//конец загрузки
     })
